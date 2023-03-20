@@ -1,0 +1,12 @@
+{
+	"extends": "@tsconfig/node-lts-strictest/tsconfig.json",
+	"compilerOptions": {
+		"outDir": "dist",
+		"ignoreDeprecations": "5.0",
+		"noPropertyAccessFromIndexSignature": false,
+		"noUncheckedIndexedAccess": false
+	},
+	"ts-node": {
+		"files": true
+	},
+}

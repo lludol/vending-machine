@@ -1,0 +1,45 @@
+{
+  "name": "vending-machine-api",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "repository": "git@github.com:lludol/vending-machine-api.git",
+  "author": "lludol <lludol@users.noreply.github.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "nodemon ./index.ts",
+    "start": "node dist/index.js",
+    "lint": "eslint . --ext .ts",
+    "knex:migrate:make": "knex migrate:make",
+    "knex:migrate": "knex migrate:latest"
+  },
+  "engines": {
+    "node": "= 18.x"
+  },
+  "dependencies": {
+    "@fastify/autoload": "^5.7.1",
+    "@fastify/env": "^4.2.0",
+    "@fastify/jwt": "^6.7.1",
+    "@fastify/sensible": "^5.2.0",
+    "bcrypt": "^5.1.0",
+    "better-sqlite3": "^8.2.0",
+    "fastify": "^4.15.0",
+    "fastify-plugin": "^4.5.0",
+    "json-schema-to-ts": "^2.7.2",
+    "knex": "^2.4.2",
+    "pino-pretty": "^10.0.0",
+    "typescript": "^5.0.2"
+  },
+  "devDependencies": {
+    "@tsconfig/node-lts-strictest": "^18.12.1",
+    "@tsconfig/node18-strictest": "^1.0.0",
+    "@types/bcrypt": "^5.0.0",
+    "@types/node": "^18.15.3",
+    "@typescript-eslint/eslint-plugin": "^5.55.0",
+    "@typescript-eslint/parser": "^5.55.0",
+    "eslint": "^8.36.0",
+    "eslint-config-lludol": "^0.2.1",
+    "nodemon": "^2.0.21",
+    "ts-node": "^10.9.1"
+  }
+}
