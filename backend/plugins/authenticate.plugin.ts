@@ -18,8 +18,10 @@ const knexPlugin: FastifyPluginAsync = async function (fastify) {
 		if (role) {
 			const user = await getUserById(fastify.knex, request.user.id);
 
-			if (!user || user.role !== role) {
+			if (!user) {
 				throw fastify.httpErrors.unauthorized();
+			} if (user.role !== role) {
+				throw fastify.httpErrors.forbidden();
 			}
 		}
 	});

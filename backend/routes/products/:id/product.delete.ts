@@ -1,48 +1,36 @@
 import type { FastifyRequest, RouteOptions } from 'fastify';
 import type { FromSchema } from 'json-schema-to-ts';
-import { getProductById, updateProductById } from '../../../models/product.model';
+import { deleteProductById, getProductById } from '../../../models/product.model';
 
 const paramsJsonSchema = {
 	type:       'object',
 	properties: {
 		id: { type: 'number' },
 	},
-	required: ['id'],
-} as const;
-
-const bodyJsonSchema = {
-	type:       'object',
-	properties: {
-		amountAvailable: { type: 'number', minimum: 1 },
-		cost:            { type: 'number', minimum: 0 },
-		productName:     { type: 'string', minLength: 3, maxLength: 255 },
-	},
-	minProperties: 1,
+	required:             ['id'],
+	additionalProperties: false,
 } as const;
 
 const schema = {
-	body:   bodyJsonSchema,
 	params: paramsJsonSchema,
 };
 
 type CustomRequest = FastifyRequest<{
-	Body: FromSchema<typeof bodyJsonSchema>;
 	Params: FromSchema<typeof paramsJsonSchema>
 }>
 
 export default {
-	method: 'PUT',
+	method: 'DELETE',
 	url:    '/',
 	schema,
 	onRequest(request) {
 		return this.authenticate(request, 'seller');
 	},
 	async handler(request: CustomRequest) {
-		const { body } = request;
+		const { id: paramId } = request.params;
 		const { id: userId } = request.user;
-		const { id: productId } = request.params;
 
-		const product = await getProductById(this.knex, productId);
+		const product = await getProductById(this.knex, paramId);
 
 		if (!product) {
 			throw this.httpErrors.notFound();
@@ -50,6 +38,10 @@ export default {
 			throw this.httpErrors.unauthorized();
 		}
 
-		return updateProductById(this.knex, productId, body);
+		await deleteProductById(this.knex, product.id);
+
+		return {
+			id: product.id,
+		};
 	},
 } as RouteOptions;

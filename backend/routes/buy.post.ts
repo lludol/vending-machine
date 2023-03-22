@@ -10,7 +10,8 @@ const bodyJsonSchema = {
 		productId: { type: 'number', minimum: 1 },
 		amount:    { type: 'number', minimum: 1 },
 	},
-	required: ['productId', 'amount'],
+	required:             ['productId', 'amount'],
+	additionalProperties: false,
 } as const;
 
 const schema = {

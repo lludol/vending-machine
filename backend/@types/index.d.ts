@@ -4,7 +4,7 @@ import type { Role } from '../models/user.model';
 declare module 'fastify' {
 	interface FastifyInstance {
 		config: {
-			NODE_ENV: 'development' | 'production';
+			NODE_ENV: 'development' | 'production' | 'test';
 			PORT: number;
 			HOST: string;
 			JWT_SECRET: string;

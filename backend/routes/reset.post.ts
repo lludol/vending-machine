@@ -3,7 +3,8 @@ import type { FromSchema } from 'json-schema-to-ts';
 import { updateUserById } from '../models/user.model';
 
 const bodyJsonSchema = {
-	type: 'object',
+	type:                 'object',
+	additionalProperties: false,
 } as const;
 
 const schema = {

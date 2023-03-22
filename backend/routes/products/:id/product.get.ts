@@ -1,13 +1,14 @@
 import type { FastifyRequest, RouteOptions } from 'fastify';
 import type { FromSchema } from 'json-schema-to-ts';
-import { deleteProductById, getProductById } from '../../../models/product.model';
+import { getProductById } from '../../../models/product.model';
 
 const paramsJsonSchema = {
 	type:       'object',
 	properties: {
 		id: { type: 'number' },
 	},
-	required: ['id'],
+	required:             ['id'],
+	additionalProperties: false,
 } as const;
 
 const schema = {
@@ -19,28 +20,21 @@ type CustomRequest = FastifyRequest<{
 }>
 
 export default {
-	method: 'DELETE',
+	method: 'GET',
 	url:    '/',
 	schema,
 	onRequest(request) {
-		return this.authenticate(request, 'seller');
+		return this.authenticate(request);
 	},
 	async handler(request: CustomRequest) {
 		const { id: paramId } = request.params;
-		const { id: userId } = request.user;
 
 		const product = await getProductById(this.knex, paramId);
 
 		if (!product) {
 			throw this.httpErrors.notFound();
-		} if (product.sellerId !== userId) {
-			throw this.httpErrors.unauthorized();
 		}
 
-		await deleteProductById(this.knex, product.id);
-
-		return {
-			id: product.id,
-		};
+		return product;
 	},
 } as RouteOptions;

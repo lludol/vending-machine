@@ -1,11 +1,13 @@
 {
 	"extends": "@tsconfig/node-lts-strictest/tsconfig.json",
 	"compilerOptions": {
-		"outDir": "dist",
+		"outDir": "../dist",
 		"ignoreDeprecations": "5.0",
 		"noPropertyAccessFromIndexSignature": false,
-		"noUncheckedIndexedAccess": false
+		"noUncheckedIndexedAccess": false,
+		"typeRoots": ["./@types"]
 	},
+	"exclude": ["test"],
 	"ts-node": {
 		"files": true
 	},

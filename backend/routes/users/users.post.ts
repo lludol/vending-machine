@@ -10,7 +10,8 @@ const bodyJsonSchema = {
 		password: { type: 'string', minLength: 8, maxLength: 30 },
 		role:  	  { type: 'string', enum: ['seller', 'buyer'] },
 	},
-	required: ['username', 'password', 'role'],
+	required:             ['username', 'password', 'role'],
+	additionalProperties: false,
 } as const;
 
 const schema = {
@@ -31,7 +32,7 @@ export default {
 		const user = await getUserByUsername(this.knex, body.username);
 
 		if (user) {
-			throw this.httpErrors.badRequest();
+			throw this.httpErrors.badRequest('USERNAME_EXISTS');
 		}
 
 		await createUser(this.knex, {

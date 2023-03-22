@@ -8,7 +8,8 @@ const paramsJsonSchema = {
 	properties: {
 		id: { type: 'number' },
 	},
-	required: ['id'],
+	required:             ['id'],
+	additionalProperties: false,
 } as const;
 
 const bodyJsonSchema = {
@@ -17,7 +18,8 @@ const bodyJsonSchema = {
 		username: { type: 'string', minLength: 3, maxLength: 30 },
 		password: { type: 'string', minLength: 8, maxLength: 30 },
 	},
-	minProperties: 1,
+	additionalProperties: false,
+	minProperties:        1,
 } as const;
 
 const schema = {
@@ -43,24 +45,24 @@ export default {
 		const { body } = request;
 
 		if (paramId	!== userId) {
-			throw this.httpErrors.badRequest();
+			throw this.httpErrors.forbidden();
 		}
 
 		const user = await getUserById(this.knex, userId);
 
 		if (!user) {
-			throw this.httpErrors.badRequest();
-		}
-
-		const userUpdated = await updateUserById(this.knex, userId, {
-			username: body.username,
-			password: body.password ? await hashPassword(body.password) : undefined,
-		} as Partial<User>);
-
-		if (!userUpdated) {
 			throw this.httpErrors.notFound();
 		}
 
-		return userUpdated;
+		try {
+			const userUpdated = await updateUserById(this.knex, userId, {
+				username: body.username,
+				password: body.password ? await hashPassword(body.password) : undefined,
+			} as Partial<User>);
+
+			return userUpdated;
+		} catch {
+			throw this.httpErrors.badRequest('USERNAME_EXISTS');
+		}
 	},
 } as RouteOptions;

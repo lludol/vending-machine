@@ -9,7 +9,8 @@ const bodyJsonSchema = {
 		cost:            { type: 'number', minimum: 0 },
 		productName:     { type: 'string', minLength: 3, maxLength: 255 },
 	},
-	required: ['amountAvailable', 'cost', 'productName'],
+	required:             ['amountAvailable', 'cost', 'productName'],
+	additionalProperties: false,
 } as const;
 
 const schema = {

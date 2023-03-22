@@ -12,6 +12,8 @@ export interface User {
 
 export const publicUserFields = ['id', 'username', 'deposit', 'role'] as const;
 
+export const getUsers = (knex: Knex) => knex<User[]>('users').select(publicUserFields);
+
 export const getUserByUsername = (knex: Knex, username: string) => knex<User>('users')
 	.select(publicUserFields)
 	.where('username', username)
