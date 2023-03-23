@@ -1,5 +1,5 @@
 import type { RouteOptions } from 'fastify';
-import { getProducts } from '../../models/product.model';
+import { getProducts, getProductsAvailable } from '../../models/product.model';
 import { getUserById } from '../../models/user.model';
 
 export default {
@@ -15,6 +15,10 @@ export default {
 
 		if (!user) {
 			throw this.httpErrors.notFound();
+		}
+
+		if (user.role === 'buyer') {
+			return getProductsAvailable(this.knex);
 		}
 
 		return getProducts(this.knex);

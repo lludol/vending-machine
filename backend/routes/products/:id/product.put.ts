@@ -15,7 +15,7 @@ const bodyJsonSchema = {
 	type:       'object',
 	properties: {
 		amountAvailable: { type: 'number', minimum: 1 },
-		cost:            { type: 'number', minimum: 0 },
+		cost:            { type: 'number', minimum: 1 },
 		productName:     { type: 'string', minLength: 3, maxLength: 255 },
 	},
 	minProperties: 1,

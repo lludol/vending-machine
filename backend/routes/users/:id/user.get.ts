@@ -3,12 +3,24 @@ import type { FromSchema } from 'json-schema-to-ts';
 import { getUserById } from '../../../models/user.model';
 
 const paramsJsonSchema = {
-	type:       'object',
-	properties: {
-		id: { type: 'number' },
-	},
-	required:             ['id'],
-	additionalProperties: false,
+	oneOf: [
+		{
+			type:       'object',
+			properties: {
+				id: { type: 'number' },
+			},
+			required:             ['id'],
+			additionalProperties: false,
+		},
+		{
+			type:       'object',
+			properties: {
+				id: { type: 'string', enum: ['me'] },
+			},
+			required:             ['id'],
+			additionalProperties: false,
+		},
+	],
 } as const;
 
 const schema = {
@@ -28,8 +40,14 @@ export default {
 	},
 	async handler(request: CustomRequest) {
 		const { id: paramId } = request.params;
+		const { id: userId } = request.user;
 
-		const user = await getUserById(this.knex, paramId);
+		let user = null;
+		if (paramId === 'me') {
+			user = await getUserById(this.knex, userId);
+		} else {
+			user = await getUserById(this.knex, paramId);
+		}
 
 		if (!user) {
 			throw this.httpErrors.notFound();

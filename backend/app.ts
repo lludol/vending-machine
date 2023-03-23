@@ -4,6 +4,7 @@ import Fastify from 'fastify';
 import type { FastifyServerOptions } from 'fastify';
 import fastifyAutoload from '@fastify/autoload';
 import path from 'path';
+import fastifyCors from '@fastify/cors';
 
 const build = (options: FastifyServerOptions = {}) => {
 	const envSchema = {
@@ -23,6 +24,8 @@ const build = (options: FastifyServerOptions = {}) => {
 		dotenv: true,
 		schema: envSchema,
 	});
+
+	app.register(fastifyCors);
 
 	app.register(fastifySensible);
 

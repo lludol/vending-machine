@@ -13,6 +13,7 @@ export const getProductById = (knex: Knex, id: number) => knex<Product>('product
 	.first();
 
 export const getProducts = (knex: Knex) => knex<Product>('products');
+export const getProductsAvailable = (knex: Knex) => knex<Product>('products').where('amountAvailable', '>', 0);
 
 export const createProduct = async (knex: Knex, data: Partial<Product>) => {
 	const productCreated = await knex<Product>('products')
