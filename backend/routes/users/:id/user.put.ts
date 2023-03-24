@@ -16,7 +16,10 @@ const bodyJsonSchema = {
 	type:       'object',
 	properties: {
 		username: { type: 'string', minLength: 3, maxLength: 30 },
-		password: { type: 'string', minLength: 8, maxLength: 30 },
+		role:  	  { type: 'string', enum: ['seller', 'buyer'] },
+
+		password:      { type: 'string', minLength: 8, maxLength: 30 },
+		passwordCheck: { type: 'string', minLength: 8, maxLength: 30 },
 	},
 	additionalProperties: false,
 	minProperties:        1,
@@ -54,9 +57,15 @@ export default {
 			throw this.httpErrors.notFound();
 		}
 
+		if (body.password && body.password !== body.passwordCheck) {
+			throw this.httpErrors.badRequest('PASSWORDS_NOT_MATCH');
+		}
+
 		try {
 			const userUpdated = await updateUserById(this.knex, userId, {
 				username: body.username,
+				role:     body.role,
+				deposit:  body.role === 'seller' ? 0 : user.deposit,
 				password: body.password ? await hashPassword(body.password) : undefined,
 			} as Partial<User>);
 

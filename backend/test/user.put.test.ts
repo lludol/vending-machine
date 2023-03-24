@@ -24,6 +24,7 @@ describe('/users/:id PUT 200', () => {
 			},
 		});
 
+		const userUpdated = await app.knex('users').where('id', user.id).first();
 		expect(response.statusCode).toBe(200);
 		expect(response.headers['content-type']).toBe('application/json; charset=utf-8');
 		expect(response.json()).toMatchObject({
@@ -32,7 +33,31 @@ describe('/users/:id PUT 200', () => {
 			role:     user.role,
 			deposit:  user.deposit,
 		});
-		expect(app.knex('users').where('id', user.id).first()).resolves.toHaveProperty('username', newUsername);
+		expect(userUpdated).toHaveProperty('username', newUsername);
+	});
+
+	test('We can update our password', async () => {
+		const { user, token } = await createFakeUser(app, {
+			username: 'userUpdate200Password',
+			password: 'helloWorld!',
+			role:     'buyer',
+		});
+		const newPassword = 'helloWorld!new';
+
+		const response = await app.inject({
+			method:  'PUT',
+			url:     `/users/${user.id}`,
+			payload: {
+				password:      newPassword,
+				passwordCheck: newPassword,
+			},
+			headers: {
+				authorization: `Bearer ${token}`,
+			},
+		});
+
+		expect(response.statusCode).toBe(200);
+		expect(response.headers['content-type']).toBe('application/json; charset=utf-8');
 	});
 });
 
@@ -57,6 +82,34 @@ describe('/users/:id PUT 400', () => {
 
 		expect(response.statusCode).toBe(400);
 		expect(response.headers['content-type']).toBe('application/json; charset=utf-8');
+	});
+
+	test('Return an error when password does not match', async () => {
+		const { user, token } = await createFakeUser(app, {
+			username: 'userUpdate400Password',
+			password: 'helloWorld!',
+			role:     'seller',
+		});
+
+		const response = await app.inject({
+			method:  'PUT',
+			url:     `/users/${user.id}`,
+			payload: {
+				password:      'helloWorld!',
+				passwordCheck: 'helloWorld!42',
+			},
+			headers: {
+				authorization: `Bearer ${token}`,
+			},
+		});
+
+		expect(response.statusCode).toBe(400);
+		expect(response.headers['content-type']).toBe('application/json; charset=utf-8');
+		expect(response.json()).toMatchObject({
+			error:      'Bad Request',
+			statusCode: 400,
+			message:    'PASSWORDS_NOT_MATCH',
+		});
 	});
 
 	test('Return an error when username is not available', async () => {

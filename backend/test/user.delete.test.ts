@@ -20,12 +20,14 @@ describe('/users/:id DELETE 200', () => {
 			},
 		});
 
+		const userDeleted = await app.knex('users').where('id', user.id).first();
+
 		expect(response.statusCode).toBe(200);
 		expect(response.headers['content-type']).toBe('application/json; charset=utf-8');
 		expect(response.json()).toMatchObject({
 			id: user.id,
 		});
-		expect(app.knex('users').where('id', user.id).first()).resolves.toBeUndefined();
+		expect(userDeleted).toBeUndefined();
 	});
 });
 

@@ -29,12 +29,14 @@ describe('/deposit POST 200', () => {
 			},
 		});
 
+		const userCreated = await app.knex('users').select('deposit').where('id', user.id).first();
+
 		expect(response.statusCode).toBe(200);
 		expect(response.headers['content-type']).toBe('application/json; charset=utf-8');
 		expect(response.json()).toMatchObject({
 			deposit,
 		});
-		expect(app.knex('users').select('deposit').where('id', user.id).first()).resolves.toMatchObject({
+		expect(userCreated).toMatchObject({
 			deposit: user.deposit + deposit,
 		});
 	});

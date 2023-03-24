@@ -1,4 +1,3 @@
-import knex from 'knex';
 import {
 	expect, test, describe,
 } from 'vitest';
@@ -45,6 +44,43 @@ describe('/buy POST 200', () => {
 			productsBought:  1,
 			remainingChange: [10],
 		});
+	});
+});
+
+describe('/buy POST 400', () => {
+	test('Return an error if we don\'t have enough money', async () => {
+		const { token } = await createFakeUser(app, {
+			username: 'userBuy400Buyer',
+			password: 'helloWorld!',
+			role:     'buyer',
+			deposit:  20,
+		});
+		const { user } = await createFakeUser(app, {
+			username: 'userBuy400Seller',
+			password: 'helloWorld!',
+			role:     'seller',
+		});
+		const product = await createProduct(app.knex, {
+			cost:            30,
+			productName:     'productBuy400',
+			sellerId:        user.id,
+			amountAvailable: 10,
+		});
+
+		const response = await app.inject({
+			method:  'POST',
+			url:     '/buy',
+			headers: {
+				authorization: `Bearer ${token}`,
+			},
+			payload: {
+				productId: product.id,
+				amount:    1,
+			},
+		});
+
+		expect(response.statusCode).toBe(400);
+		expect(response.headers['content-type']).toBe('application/json; charset=utf-8');
 	});
 });
 

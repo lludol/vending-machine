@@ -23,14 +23,14 @@ describe('/users GET 200', () => {
 		expect(response.statusCode).toBe(200);
 		expect(response.headers['content-type']).toBe('application/json; charset=utf-8');
 		expect(response.json().length).toBeGreaterThanOrEqual(1);
-		expect(response.json()).toEqual(expect.arrayContaining([
-			{
-				id:       user.id,
-				username: user.username,
-				role:     user.role,
-				deposit:  user.deposit,
-			},
-		]));
+
+		const userCreated = response.json().find((u: any) => u.id === user.id);
+		expect(userCreated).toMatchObject({
+			id:       user.id,
+			username: user.username,
+			role:     user.role,
+			deposit:  user.deposit,
+		});
 	});
 });
 
