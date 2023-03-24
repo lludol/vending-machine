@@ -35,11 +35,11 @@ export const SellerView = () => {
 				<TableProducts onEdit={onEdit}/>
 			</Box>
 
-			<ModalCreateProduct
+			{ open && <ModalCreateProduct
 				open={open}
 				onClose={closeModal}
 				productId={productId}
-			/>
+			/> }
 		</>
 
 	);

@@ -1,14 +1,38 @@
 import {
 	Box, Button, Container, Grid, Typography,
 } from '@mui/material';
+import { useCallback, useContext, useState } from 'react';
 import { BuyerView } from '../components/buyer/BuyerView';
 import { SellerView } from '../components/seller/SellerView';
+import { ModalProfile } from '../components/user/ModalProfile';
+import ToastContext, { ToastContextType } from '../contexts/ToastProvider';
+import { deleteUser } from '../data/users';
 import { useUser } from '../data/users.swr';
 import useLogout from '../hooks/useLogout';
 
 const Home = () => {
+	const { toast } = useContext<ToastContextType>(ToastContext);
 	const { logout } = useLogout();
 	const { data: user } = useUser();
+
+	const [profileOpen, setProfileOpen] = useState(false);
+	const openProfileModal = useCallback(() => { setProfileOpen(true); }, []);
+	const closeProfileModal = useCallback(() => { setProfileOpen(false); }, []);
+
+	const onDeleteMyAccount = useCallback(async () => {
+		if (!user) {
+			return;
+		}
+
+		try {
+			await deleteUser(user.id);
+			toast('Your account has been deleted');
+			closeProfileModal();
+			logout();
+		} catch {
+			toast('An unknown error occurred.');
+		}
+	}, [closeProfileModal, logout, toast, user]);
 
 	return (
 		<Container>
@@ -25,11 +49,21 @@ const Home = () => {
 							Welcome {user?.username}
 						</Typography>
 					</Grid>
-					<Grid item>
+					<Grid item sx={{
+						display:       'flex',
+						flexDirection: 'row',
+					}}>
+						<Button
+							onClick={openProfileModal}
+							color='info'
+							variant="contained"
+							sx={{ mt: 2, mb: 2, mr: 1 }}
+						>
+							MY PROFILE
+						</Button>
 						<Button
 							onClick={logout}
 							color='error'
-							fullWidth
 							variant="contained"
 							sx={{ mt: 2, mb: 2 }}
 						>
@@ -40,6 +74,14 @@ const Home = () => {
 
 				{ user?.role === 'seller' && <SellerView/> }
 				{ user?.role === 'buyer' && <BuyerView/> }
+				{ profileOpen && user
+					&& <ModalProfile
+						open={profileOpen}
+						onClose={closeProfileModal}
+						user={user}
+						onDeleteMyAccount={onDeleteMyAccount}
+					/>
+				}
 			</Box>
 		</Container>
 	);

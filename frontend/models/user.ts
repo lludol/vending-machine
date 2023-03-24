@@ -9,6 +9,15 @@ export interface User {
 	role: Role;
 }
 
+export interface UserCreatePayload {
+	username: string;
+	role: Role;
+	password: string;
+	passwordCheck: string;
+}
+
+export type UserUpdatePayload = Partial<UserCreatePayload>;
+
 export interface DepositPayload {
 	deposit: Coin;
 }

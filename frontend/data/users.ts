@@ -1,10 +1,28 @@
 import {
-	BuyPayload, BuyResponse, DepositPayload, Role,
+	BuyPayload, BuyResponse, DepositPayload, UserCreatePayload, UserUpdatePayload,
 } from '../models/user';
 import http from '../utils/http';
 
-export const createUser = async (values: { username: string, password: string, role: Role }) => {
+export const createUser = async (values: UserCreatePayload) => {
 	const { data } = await http.post('/users', values);
+
+	return data;
+};
+
+export const updateUser = async (id: number, values: UserUpdatePayload) => {
+	const { data } = await http.put(`/users/${id}`, {
+		username:      values.username && values.username.length > 0 ? values.username : undefined,
+		role:          values.role,
+		password:      values.password && values.password.length > 0 ? values.password : undefined,
+		passwordCheck: values.passwordCheck && values.passwordCheck.length > 0
+			? values.passwordCheck : undefined,
+	});
+
+	return data;
+};
+
+export const deleteUser = async (id: number) => {
+	const { data } = await http.delete(`/users/${id}`);
 
 	return data;
 };

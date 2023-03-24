@@ -7,6 +7,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useProducts } from '../../data/products.swr';
 import ToastContext, { ToastContextType } from '../../contexts/ToastProvider';
 import { deleteProduct } from '../../data/products';
+import { useUser } from '../../data/users.swr';
 
 interface Props {
 	onEdit: (id: number) => void;
@@ -16,7 +17,12 @@ const IconStyle = {
 	cursor: 'pointer',
 };
 
+const IconDisabled = {
+	cursor: 'not-allowed',
+};
+
 export const TableProducts: FunctionComponent<Props> = ({ onEdit }) => {
+	const { data: user } = useUser();
 	const { data: products, mutate: mutateProducts } = useProducts();
 	const { toast } = useContext<ToastContextType>(ToastContext);
 
@@ -42,7 +48,7 @@ export const TableProducts: FunctionComponent<Props> = ({ onEdit }) => {
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					{products && products.map((product) => (
+					{user && products && products.map((product) => (
 						<TableRow
 							key={product.id}
 							sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -51,8 +57,16 @@ export const TableProducts: FunctionComponent<Props> = ({ onEdit }) => {
 							<TableCell align="right">${product.cost}</TableCell>
 							<TableCell align="right">{product.amountAvailable}</TableCell>
 							<TableCell align="right">
-								<EditIcon color="info" style={IconStyle} onClick={() => onEdit(product.id)}/>
-								<DeleteIcon color="error" style={IconStyle} onClick={() => onClickDelete(product.id)}/>
+								<EditIcon
+									color={product.sellerId !== user.id ? 'disabled' : 'info'}
+									style={product.sellerId !== user.id ? IconDisabled : IconStyle}
+									onClick={product.sellerId !== user.id ? null : () => onEdit(product.id)}
+								/>
+								<DeleteIcon
+									color={product.sellerId !== user.id ? 'disabled' : 'error'}
+									style={product.sellerId !== user.id ? IconDisabled : IconStyle}
+									onClick={product.sellerId !== user.id ? null : () => onClickDelete(product.id)}
+								/>
 							</TableCell>
 						</TableRow>
 					))}

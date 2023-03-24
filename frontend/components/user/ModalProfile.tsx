@@ -1,15 +1,34 @@
 import {
-	Button, Container, FormControlLabel, Grid, Radio, RadioGroup, TextField, Typography,
+	Modal, Box, Typography, TextField, Button, Radio, FormControlLabel, RadioGroup,
 } from '@mui/material';
-import { Box } from '@mui/system';
-import { useCallback, useContext, useState } from 'react';
 import { useFormik } from 'formik';
+import {
+	FunctionComponent, useCallback, useContext, useState,
+} from 'react';
 import * as yup from 'yup';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { createUser } from '../data/users';
-import ToastContext, { ToastContextType } from '../contexts/ToastProvider';
-import { UserCreatePayload } from '../models/user';
+import ToastContext, { ToastContextType } from '../../contexts/ToastProvider';
+import { updateUser } from '../../data/users';
+import { useUser } from '../../data/users.swr';
+import { User, UserUpdatePayload } from '../../models/user';
+
+interface Props {
+	open: boolean;
+	onClose: () => void;
+	user: User;
+	onDeleteMyAccount: () => void;
+}
+
+const modalStyle = {
+	position:  'absolute' as const,
+	top:       '50%',
+	left:      '50%',
+	transform: 'translate(-50%, -50%)',
+	width:     400,
+	bgcolor:   'background.paper',
+	border:    '2px solid #000',
+	boxShadow: 24,
+	p:         4,
+};
 
 const validationSchema = yup.object({
 	username: yup
@@ -17,34 +36,34 @@ const validationSchema = yup.object({
 		.trim('Please remove leading and trailing spaces')
 		.min(3, 'Username should be of minimum 8 characters length')
 		.max(30, 'Username should be of maximum 30 characters length')
-		.strict()
-		.required('Username is required'),
+		.strict(),
+	role: yup
+		.string()
+		.oneOf(['buyer', 'seller'], 'Role should be either buyer or seller'),
 	password: yup
 		.string()
 		.min(8, 'Password should be of minimum 8 characters length')
-		.max(30, 'Password should be of maximum 30 characters length')
-		.required('Password is required'),
+		.max(30, 'Password should be of maximum 30 characters length'),
 	passwordCheck: yup
 		.string()
-		.oneOf([yup.ref('password'), null], 'Passwords must match')
-		.required('Password is required'),
-	role: yup
-		.string()
-		.oneOf(['buyer', 'seller'], 'Role should be either buyer or seller')
-		.required('Role is required'),
+		.oneOf([yup.ref('password'), null], 'Passwords must match'),
 });
 
-const Signup = () => {
-	const router = useRouter();
+export const ModalProfile: FunctionComponent<Props> = ({
+	open, onClose, user, onDeleteMyAccount,
+}) => {
 	const [loading, setLoading] = useState(false);
 	const { toast } = useContext<ToastContextType>(ToastContext);
+	const { mutate: mutateUser } = useUser();
 
-	const onSubmit = useCallback(async (values: UserCreatePayload) => {
+	const onSubmit = useCallback(async (values: Partial<UserUpdatePayload>, { resetForm }) => {
 		setLoading(true);
 		try {
-			await createUser(values);
-			toast('Account created, you can now sign in.');
-			router.push('/signin');
+			await updateUser(user.id, values);
+			await mutateUser();
+			toast('Profile updated');
+			resetForm();
+			onClose();
 		} catch (e) {
 			if (e.code === 'ERR_BAD_REQUEST') {
 				if (e.response.data.message === 'USERNAME_EXISTS') {
@@ -57,38 +76,36 @@ const Signup = () => {
 			}
 		}
 		setLoading(false);
-	}, [router, toast]);
+	}, [user, mutateUser, toast, onClose]);
 
 	const {
-		handleSubmit, handleChange,
-		errors, touched, values,
+		values, errors, touched,
+		handleChange, handleSubmit,
 	} = useFormik({
 		initialValues: {
-			username:      '',
+			username:      user.username,
+			role:          user.role,
 			password:      '',
 			passwordCheck: '',
-			role:          'buyer',
 		},
 		validationSchema,
 		onSubmit,
 	});
 
 	return (
-		<Container maxWidth="xs">
-			<Box
-				sx={{
-					marginTop:     8,
-					display:       'flex',
-					flexDirection: 'column',
-					alignItems:    'center',
-				}}>
-				<Typography component="h1" variant="h5">
-					Sign up
+		<Modal
+			open={open}
+			onClose={onClose}
+			aria-labelledby="modal-modal-title"
+			aria-describedby="modal-modal-description"
+		>
+			<Box sx={modalStyle}>
+				<Typography variant="h6" component="h2">
+					Update profile
 				</Typography>
 				<Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
 					<TextField
 						margin="normal"
-						required
 						fullWidth
 						id="username"
 						label="Username"
@@ -101,36 +118,6 @@ const Signup = () => {
 						autoFocus
 					/>
 
-					<TextField
-						margin="normal"
-						required
-						fullWidth
-						name="password"
-						label="Password"
-						type="password"
-						id="password"
-						value={values.password}
-						onChange={handleChange}
-						error={touched.password && Boolean(errors.password)}
-						helperText={(touched.password && errors.password && typeof errors.password === 'string') && errors.password}
-						autoComplete="current-password"
-					/>
-
-					<TextField
-						margin="normal"
-						required
-						fullWidth
-						name="passwordCheck"
-						label="Confirm password"
-						type="password"
-						id="passwordCheck"
-						value={values.passwordCheck}
-						onChange={handleChange}
-						error={touched.passwordCheck && Boolean(errors.passwordCheck)}
-						helperText={(touched.passwordCheck && errors.passwordCheck && typeof errors.passwordCheck === 'string') && errors.passwordCheck}
-						autoComplete="current-password"
-					/>
-
 					<RadioGroup
 						row
 						name="role"
@@ -141,6 +128,34 @@ const Signup = () => {
 						<FormControlLabel value="seller" control={<Radio required />} label="Seller" />
 					</RadioGroup>
 
+					<TextField
+						margin="normal"
+						fullWidth
+						id="password"
+						label="New password"
+						name="password"
+						type="password"
+						value={values.password}
+						onChange={handleChange}
+						error={touched.password && Boolean(errors.password)}
+						helperText={(touched.password && errors.password && typeof errors.password === 'string') && errors.password}
+						autoComplete="new-password"
+					/>
+
+					<TextField
+						margin="normal"
+						fullWidth
+						id="passwordCheck"
+						label="Confirm password"
+						name="passwordCheck"
+						type="password"
+						value={values.passwordCheck}
+						onChange={handleChange}
+						error={touched.passwordCheck && Boolean(errors.passwordCheck)}
+						helperText={(touched.passwordCheck && errors.passwordCheck && typeof errors.passwordCheck === 'string') && errors.passwordCheck}
+						autoComplete="new-password"
+					/>
+
 					<Button
 						type="submit"
 						fullWidth
@@ -148,20 +163,19 @@ const Signup = () => {
 						disabled={loading}
 						sx={{ mt: 2, mb: 2 }}
 					>
-							SIGN UP
+						Update
+					</Button>
+					<Button
+						onClick={onDeleteMyAccount}
+						color="error"
+						fullWidth
+						variant="contained"
+						disabled={loading}
+					>
+						Delete my account
 					</Button>
 				</Box>
-				<Grid container>
-					<Grid item xs></Grid>
-					<Grid item>
-						<Link href="/signin">
-							{'Already have an account? Sign In'}
-						</Link>
-					</Grid>
-				</Grid>
 			</Box>
-		</Container>
+		</Modal>
 	);
 };
-
-export default Signup;
