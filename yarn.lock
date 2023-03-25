@@ -691,11 +691,6 @@
   resolved "https://registry.yarnpkg.com/@tsconfig/node16/-/node16-1.0.3.tgz#472eaab5f15c1ffdd7f8628bd4c4f753995ec79e"
   integrity sha512-yOlFc+7UtL/89t2ZhjPvvB/DeAr3r+Dq58IgzsFkOAvVC6NMJXmCGjbptdXdR9qsX7pKcTL+s87FtYREi2dEEQ==
 
-"@tsconfig/node18-strictest@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@tsconfig/node18-strictest/-/node18-strictest-1.0.0.tgz#d7c49f29ef95c47182995bd2bfcf8c177512a8de"
-  integrity sha512-bOuNKwO4Fzbt+Su5wqI9zNHwx5C25gLnutwVQA1sBZk0cW8UjVPVcwzIUhJIIJDUx7zDEbAwdCD2HfvIsV8dYg==
-
 "@types/bcrypt@^5.0.0":
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/@types/bcrypt/-/bcrypt-5.0.0.tgz#a835afa2882d165aff5690893db314eaa98b9f20"
@@ -2760,11 +2755,6 @@ joycon@^3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/joycon/-/joycon-3.1.1.tgz#bce8596d6ae808f8b68168f5fc69280996894f03"
   integrity sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw==
-
-js-cookies@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/js-cookies/-/js-cookies-1.0.4.tgz#d46e576c420ff6d5542c0f52b6d4ef7d637e754e"
-  integrity sha512-cO1SHDH7zJsi8FihHmDtcWx90mWmrfGOrcLKPeaEX6tLyuTK2wnzgdmNa34Q6rNAd6VhQUgjDt5Eyl90VI/Fpg==
 
 js-sdsl@^4.1.4:
   version "4.3.0"

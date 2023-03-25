@@ -40,7 +40,6 @@
     "fastify": "^4.15.0",
     "fastify-plugin": "^4.5.0",
     "formik": "^2.2.9",
-    "js-cookies": "^1.0.4",
     "json-schema-to-ts": "^2.7.2",
     "knex": "^2.4.2",
     "next": "^13.2.4",
@@ -53,7 +52,6 @@
   },
   "devDependencies": {
     "@tsconfig/node-lts-strictest": "^18.12.1",
-    "@tsconfig/node18-strictest": "^1.0.0",
     "@types/bcrypt": "^5.0.0",
     "@types/node": "^18.15.3",
     "@types/react": "18.0.28",
