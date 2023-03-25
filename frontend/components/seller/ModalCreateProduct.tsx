@@ -41,7 +41,7 @@ const validationSchema = yup.object({
 	productName: yup
 		.string()
 		.min(3, 'Product name should be of minimum 3 characters length')
-		.max(255, 'Product name should be of maximum 255 characters length'),
+		.max(42, 'Product name should be of maximum 42 characters length'),
 });
 
 export const ModalCreateProduct: FunctionComponent<Props> = ({ open, onClose, productId }) => {
