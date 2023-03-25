@@ -48,7 +48,7 @@ export default {
 		if (!product) {
 			throw this.httpErrors.notFound();
 		} if (product.sellerId !== userId) {
-			throw this.httpErrors.unauthorized();
+			throw this.httpErrors.forbidden();
 		}
 
 		return updateProductById(this.knex, productId, body);
