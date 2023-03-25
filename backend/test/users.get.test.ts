@@ -1,6 +1,7 @@
 import {
 	expect, test, describe,
 } from 'vitest';
+import { User } from '../models/user.model';
 import app from './app';
 import { createFakeUser } from './helper';
 
@@ -24,7 +25,7 @@ describe('/users GET 200', () => {
 		expect(response.headers['content-type']).toBe('application/json; charset=utf-8');
 		expect(response.json().length).toBeGreaterThanOrEqual(1);
 
-		const userCreated = response.json().find((u: any) => u.id === user.id);
+		const userCreated = response.json().find((u: User) => u.id === user.id);
 		expect(userCreated).toMatchObject({
 			id:       user.id,
 			username: user.username,
