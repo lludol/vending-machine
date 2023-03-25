@@ -10,6 +10,7 @@ import TokenContext from '../contexts/TokenProvider';
 export const publicRoutes = [
 	'/signin',
 	'/signup',
+	'/404',
 ];
 
 const ProtectedRoutes: FunctionComponent<PropsWithChildren> = (

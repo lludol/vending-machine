@@ -67,7 +67,7 @@ const Home = () => {
 							variant="contained"
 							sx={{ mt: 2, mb: 2 }}
 						>
-								LOGOUT
+							LOGOUT
 						</Button>
 					</Grid>
 				</Grid>

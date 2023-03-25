@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@emotion/react": "^11.10.6",
+    "@emotion/server": "^11.10.0",
     "@emotion/styled": "^11.10.6",
     "@fastify/autoload": "^5.7.1",
     "@fastify/cors": "^8.2.1",

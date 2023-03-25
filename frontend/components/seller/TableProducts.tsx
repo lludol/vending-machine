@@ -70,6 +70,13 @@ export const TableProducts: FunctionComponent<Props> = ({ onEdit }) => {
 							</TableCell>
 						</TableRow>
 					))}
+					{ products && products.length === 0 && <>
+						<TableRow>
+							<TableCell>
+								No products found.
+							</TableCell>
+						</TableRow>
+					</>}
 				</TableBody>
 			</Table>
 		</TableContainer>

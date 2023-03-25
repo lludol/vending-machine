@@ -41,6 +41,13 @@ export const TableProductsToBuy: FunctionComponent<Props> = ({ onBuy }) => {
 							</TableCell>
 						</TableRow>
 					))}
+					{ products && products.length === 0 && <>
+						<TableRow>
+							<TableCell>
+								No products found.
+							</TableCell>
+						</TableRow>
+					</>}
 				</TableBody>
 			</Table>
 		</TableContainer>

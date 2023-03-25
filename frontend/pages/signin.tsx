@@ -12,6 +12,8 @@ import useSignIn from '../hooks/useSignIn';
 const validationSchema = yup.object({
 	username: yup
 		.string()
+		.min(3, 'Username should be of minimum 3 characters length')
+		.max(30, 'Username should be of maximum 30 characters length')
 		.required('Username is required'),
 	password: yup
 		.string()

@@ -148,7 +148,7 @@ const Signup = () => {
 						disabled={loading}
 						sx={{ mt: 2, mb: 2 }}
 					>
-							SIGN UP
+						SIGN UP
 					</Button>
 				</Box>
 				<Grid container>

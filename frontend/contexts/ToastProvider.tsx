@@ -33,8 +33,8 @@ export const ToastContextProvider: FunctionComponent<PropsWithChildren> = ({ chi
 			toast,
 		}}>
 			<SWRConfig value={{
-				onError: (error) => {
-					if (error && error.response && error.response.status === 401) {
+				onError: (error, key) => {
+					if (error && error.response && (error.response.status === 401 || (error.response.status === 404 && key === '/users/me'))) {
 						clearToken();
 					} else {
 						toast('An error occurred. Please try again later.');

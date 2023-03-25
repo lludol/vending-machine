@@ -90,6 +90,7 @@ export const ModalDeposit: FunctionComponent<Props> = ({ open, onClose }) => {
 					</RadioGroup>
 
 					<Button
+						color="success"
 						type="submit"
 						fullWidth
 						variant="contained"

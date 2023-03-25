@@ -156,13 +156,14 @@ export const ModalCreateProduct: FunctionComponent<Props> = ({ open, onClose, pr
 					/>
 
 					<Button
+						color="success"
 						type="submit"
 						fullWidth
 						variant="contained"
 						disabled={loading}
 						sx={{ mt: 2, mb: 2 }}
 					>
-							Create
+						Create
 					</Button>
 				</Box>
 			</Box>

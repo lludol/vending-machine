@@ -13,10 +13,10 @@ export interface TokenContextType {
 const TokenContext = createContext<TokenContextType>(null);
 
 export const TokenContextProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
-	const [token, setToken] = useState();
+	const [token, setToken] = useState<string>();
 	const [isTokenLoaded, setIsTokenLoaded] = useState(false);
 
-	const setTokenCb = useCallback((newToken, save = false) => {
+	const setTokenCb = useCallback((newToken: string, save = false) => {
 		if (save) {
 			localStorage.setItem('token', newToken);
 		}

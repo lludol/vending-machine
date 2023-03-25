@@ -157,6 +157,7 @@ export const ModalProfile: FunctionComponent<Props> = ({
 					/>
 
 					<Button
+						color="success"
 						type="submit"
 						fullWidth
 						variant="contained"
