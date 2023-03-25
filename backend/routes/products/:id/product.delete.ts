@@ -35,7 +35,7 @@ export default {
 		if (!product) {
 			throw this.httpErrors.notFound();
 		} if (product.sellerId !== userId) {
-			throw this.httpErrors.unauthorized();
+			throw this.httpErrors.forbidden();
 		}
 
 		await deleteProductById(this.knex, product.id);

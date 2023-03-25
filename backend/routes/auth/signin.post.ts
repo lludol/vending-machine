@@ -1,5 +1,6 @@
 import type { FastifyRequest, RouteOptions } from 'fastify';
 import type { FromSchema } from 'json-schema-to-ts';
+import { getUserByUsername } from '../../models/user.model';
 import { comparePassword } from '../../utils/password';
 
 const bodyJsonSchema = {
@@ -26,9 +27,7 @@ export default {
 	async handler(request: CustomRequest) {
 		const { body } = request;
 
-		const user = await this.knex('users')
-			.where('username', body.username)
-			.first();
+		const user = await getUserByUsername(this.knex, body.username);
 
 		if (!user || !await comparePassword(body.password, user.password)) {
 			throw this.httpErrors.badRequest();

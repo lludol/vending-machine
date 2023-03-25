@@ -7,7 +7,7 @@ const bodyJsonSchema = {
 	properties: {
 		amountAvailable: { type: 'number', minimum: 1 },
 		cost:            { type: 'number', minimum: 1 },
-		productName:     { type: 'string', minLength: 3, maxLength: 255 },
+		productName:     { type: 'string', minLength: 3, maxLength: 42 },
 	},
 	required:             ['amountAvailable', 'cost', 'productName'],
 	additionalProperties: false,
