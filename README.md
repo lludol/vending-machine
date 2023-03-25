@@ -1,1 +1,1 @@
-# vending-machine-api
+# vending-machine
